@@ -1,0 +1,29 @@
+name: Android build
+
+on:
+  push:
+    branches: [ github-actions ]
+  pull_request:
+    branches: [ github-actions ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        submodules: 'recursive'
+    - name: "deps"
+      run: |
+        ./gradlew dependencies
+    - name: Run Build Dictionaries
+      run: ./gradlew buildDictionaries
+    - name: "build"
+      run: |
+        ./gradlew build
+    - name: Archive build artifacts
+      uses: actions/upload-artifact@v1
+      with:
+        name: outputs
+        path: app/build/outputs
+
